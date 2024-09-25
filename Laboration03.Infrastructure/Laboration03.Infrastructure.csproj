@@ -11,4 +11,9 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Laboration03.Application\Laboration03.Application.csproj" />
+    <ProjectReference Include="..\Laboration03.Domain\Laboration03.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

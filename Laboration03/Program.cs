@@ -1,4 +1,8 @@
+using Laboration03.Application.Common.Interfaces;
 using Laboration03.Infrastructure;
+using Laboration03.Infrastructure.Repository;
+using Microsoft.Extensions.DependencyInjection;
+using System.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +11,13 @@ builder.Services.AddControllersWithViews();
 
 // Register the DatabaseTest class
 builder.Services.AddSingleton<DatabaseTest>();
+
+// Register the UnitOfWork with the connection string
+builder.Services.AddScoped<IUnitOfWork>(provider =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    return new UnitOfWork(connectionString); // Pass the connection string to UnitOfWork
+});
 
 var app = builder.Build();
 
