@@ -10,3 +10,4 @@ namespace Laboration03.Application.Common.Interfaces;
 public interface IActorRepository : IRepository<Actor>
 {
 }
+

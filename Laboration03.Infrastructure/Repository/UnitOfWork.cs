@@ -3,7 +3,7 @@ using Laboration03.Infrastructure.Repository;
 using System;
 using System.Data.SqlClient;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork : IUnitOfWork, IDisposable
 {
     private readonly SqlConnection _connection;
     private SqlTransaction _transaction;

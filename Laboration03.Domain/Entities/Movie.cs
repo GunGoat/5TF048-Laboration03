@@ -17,7 +17,9 @@ public class Movie
     public string? PreviewUrl { get; set; }
     public string? Description { get; set; }
 
-    // Navigation property
-    public Director Director { get; set; }
+    // Navigation properties
+    public Director? Director { get; set; }
+    public IEnumerable<Actor>? Actors { get; set; }
+    public IEnumerable<Genre>? Genres { get; set; }
 }
 
