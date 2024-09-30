@@ -1,5 +1,100 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Actor
 @{
+    ViewData["Title"] = "Update Actor";
+}
+
+<div class="card shadow border">
+    <div class="card-header bg-warning bg-gradient ml-0 py-4">
+        <div class="col-12 text-center">
+            <h2 class="card-title text-white">Update Actor</h2>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Update" enctype="multipart/form-data">
+            <input asp-for="ActorID" hidden />
+            <input asp-for="ProfileUrl" hidden />
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" class="form-control">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nationality" class="control-label"></label>
+                <input asp-for="Nationality" class="form-control" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Biography" class="control-label"></label>
+                <textarea asp-for="Biography" class="form-control"></textarea>
+                <span asp-validation-for="Biography" class="text-danger"></span>
+            </div>
+
+            <!-- Profile Upload -->
+            <div class="form-group mb-3">
+                <label asp-for="Profile" class="control-label"></label>
+                <input asp-for="Profile" type="file" class="form-control" accept="image/*" onchange="previewProfile(event)" />
+                <span asp-validation-for="Profile" class="text-danger"></span>
+            </div>
+
+            <!-- Profile Image Preview -->
+            @if (Model.ProfileUrl != null)
+            {
+                <div class="form-group mb-3">
+                    <label class="control-label">Current Profile Image</label>
+                    <div>
+                        <img src="@Model.ProfileUrl" id="profilePreview" alt="Profile Image" style="max-width: 200px;" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group mb-3" id="previewContainer" style="display:none;">
+                    <label class="control-label">Profile Image Preview</label>
+                    <div>
+                        <img id="profilePreview" alt="Profile Preview" style="max-width: 200px;" />
+                    </div>
+                </div>
+            }
+
+            <div class="col-12">
+                <button type="submit" class="w-100 btn btn-lg btn-outline-warning">Update</button>
+                <a asp-action="Index" class="w-100 btn btn-lg btn-secondary mt-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+        function previewProfile(event) {
+            var previewContainer = document.getElementById('previewContainer');
+            var profilePreview = document.getElementById('profilePreview');
+            var reader = new FileReader();
+            reader.onload = function () {
+                profilePreview.src = reader.result;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 }

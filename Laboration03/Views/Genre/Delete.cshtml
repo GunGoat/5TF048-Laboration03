@@ -1,0 +1,27 @@
+﻿@model Genre
+@{
+    ViewData["Title"] = "Delete Genre";
+}
+
+<div class="card shadow border">
+    <div class="card-header bg-danger bg-gradient ml-0 py-4">
+        <div class="col-12 text-center">
+            <h2 class="card-title text-white">Delete Director</h2>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Delete" enctype="multipart/form-data">
+            <input asp-for="GenreID" hidden />
+
+            <div class="form-group mb-3">
+                <label asp-for="GenreName" class="control-label"></label>
+                <input asp-for="GenreName" class="form-control" readonly />
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="w-100 btn btn-lg btn-outline-danger">Delete</button>
+                <a asp-action="Index" class="w-100 btn btn-lg btn-secondary mt-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

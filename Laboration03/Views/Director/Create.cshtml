@@ -1,0 +1,48 @@
+﻿@model Director
+@{
+    ViewData["Title"] = "Create Director";
+}
+
+<div class="card shadow border">
+    <div class="card-header bg-success bg-gradient ml-0 py-4">
+        <div class="col-12 text-center">
+            <h2 class="card-title text-white">Create Director</h2>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nationality" class="control-label"></label>
+                <input asp-for="Nationality" class="form-control" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Biography" class="control-label"></label>
+                <textarea asp-for="Biography" class="form-control"></textarea>
+                <span asp-validation-for="Biography" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="w-100 btn btn-lg btn-outline-success">Create</button>
+                <a asp-action="Index" class="w-100 btn btn-lg btn-secondary mt-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,5 +1,65 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Actor>
+
 @{
+    ViewData["Title"] = "Actors List";
 }
+
+<div class="container">
+    <!-- Page header with Create button, Sort By dropdown, and Search bar -->
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <!-- Create button -->
+        <a asp-action="Create" class="btn btn-success">Create Actor</a>
+    </div>
+
+    <!-- Actor Cards List -->
+    <div class="row">
+        @foreach (var actor in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 position-relative">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">@actor.Name</h5>
+                        <div class="btn-group" role="group">
+                            <a asp-controller="Actor" asp-action="Update" asp-route-id="@actor.ActorID" class="btn btn-warning">Update</a>
+                            <a asp-controller="Actor" asp-action="Delete" asp-route-id="@actor.ActorID" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(actor.ProfileUrl))
+                        {
+                            <div class="image-container">
+                                <img src="@actor.ProfileUrl" 
+                                class="img-fluid" alt="@actor.Name" 
+                                onerror="this.onerror=null; this.src='placeholders/profile.jpg';">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="image-container">
+                                <img src="placeholders/Profile.jpg" class="img-fluid" alt="@actor.Name">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .image-container {
+        width: 100%;
+        padding-top: 100%; /* Creates a 1:1 aspect ratio container */
+        position: relative;
+        overflow: hidden;
+    }
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the container and crops excess */
+        }
+</style>

@@ -8,25 +8,25 @@ namespace Laboration03.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly DatabaseTest _databaseTest;
+        // private readonly DatabaseTest _databaseTest;
 
-        public HomeController(ILogger<HomeController> logger, DatabaseTest databaseTest)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _databaseTest = databaseTest;
+            //_databaseTest = databaseTest;
         }
 
         public IActionResult Index()
         {
-            bool canConnect = _databaseTest.CanConnectToDatabase();
-            if (canConnect)
-            {
-                TempData["success"] = "Database connection successful.";
-            }
-            else
-            {
-                TempData["error"] = "Database connection failed.";
-            }
+            //bool canConnect = _databaseTest.CanConnectToDatabase();
+            //if (canConnect)
+            //{
+            //    TempData["success"] = "Database connection successful.";
+            //}
+            //else
+            //{
+            //    TempData["error"] = "Database connection failed.";
+            //}
             return View();
         }
 

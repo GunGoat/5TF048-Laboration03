@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Register the DatabaseTest class
-builder.Services.AddSingleton<DatabaseTest>();
+// builder.Services.AddSingleton<DatabaseTest>();
 
 // Register the UnitOfWork with the connection string
 builder.Services.AddScoped<IUnitOfWork>(provider =>

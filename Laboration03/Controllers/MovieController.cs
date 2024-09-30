@@ -8,4 +8,9 @@ public class MovieController : Controller
     {
         return View();
     }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
 }
