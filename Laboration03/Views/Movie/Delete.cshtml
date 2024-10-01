@@ -1,5 +1,70 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Laboration03.Models.ViewModels.MovieVM
 @{
+    ViewData["Title"] = "Delete Movie";
+}
+
+<div class="card shadow border">
+    <div class="card-header bg-danger bg-gradient ml-0 py-4">
+        <div class="col-12 text-center">
+            <h2 class="card-title text-white">Delete Movie</h2>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Delete" method="post">
+            <input asp-for="MovieID" hidden readonly />
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" readonly />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" readonly></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" type="date" class="form-control" readonly />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" type="range" min="0" max="10" step="0.1" class="form-control-range" id="ratingSlider" disabled />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" type="number" class="form-control" readonly />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PreviewUrl" class="control-label"></label><br />
+                <video id="videoPreview" controls style="width: 100%; max-height: 400px;" src="@Url.Content(Model.PreviewUrl)"></video>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DirectorID" class="control-label">Director</label>
+                <input class="form-control" value="@(Model.AvailableDirectors.FirstOrDefault(d => d.DirectorID == Model.DirectorID)?.Name)" readonly />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SelectedActorIDs" class="control-label">Actors</label>
+                <input class="form-control" value="@(string.Join(", ", Model.AvailableActors.Where(a => Model.SelectedActorIDs.Contains(a.ActorID)).Select(a => a.Name)))" readonly />
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SelectedGenreIDs" class="control-label">Genres</label>
+                <input class="form-control" value="@(string.Join(", ", Model.AvailableGenres.Where(g => Model.SelectedGenreIDs.Contains(g.GenreID)).Select(g => g.GenreName)))" readonly />
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="w-100 btn btn-lg btn-outline-danger">Delete</button>
+                <a asp-action="Index" class="w-100 btn btn-lg btn-secondary mt-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

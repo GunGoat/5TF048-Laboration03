@@ -9,4 +9,5 @@ namespace Laboration03.Application.Common.Interfaces;
 
 public interface IMovieRepository : IRepository<Movie>
 {
+    public IEnumerable<Movie> GetMoviesWithDetails(params int[] movieIds);
 }

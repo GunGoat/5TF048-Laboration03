@@ -1,5 +1,6 @@
 ﻿using Laboration03.Application.Common.Interfaces;
 using Laboration03.Domain.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -73,5 +74,51 @@ public class MovieRepository : Repository<Movie>, IMovieRepository
         command.Parameters.AddWithValue("@Description", (object?)entity.Description ?? DBNull.Value);
         command.Parameters.AddWithValue("@MovieID", entity.MovieID);
     }
+
+    public IEnumerable<Movie> GetMoviesWithDetails(params int[] movieIds)
+    {
+        // Base query
+        string query = "SELECT * FROM View_MoviesWithDetails";
+
+        // If movieIds are provided, add WHERE clause
+        if (movieIds.Length > 0)
+        {
+            string ids = string.Join(",", movieIds);
+            query += $" WHERE MovieID IN ({ids})";
+        }
+
+        using (SqlCommand command = new SqlCommand(query, _connection, _transaction))
+        {
+            using (var reader = command.ExecuteReader())
+            {
+                List<Movie> movies = new List<Movie>();
+
+                while (reader.Read())
+                {
+                    var movie = new Movie
+                    {
+                        MovieID = (int)reader["MovieID"],
+                        Title = reader["Title"].ToString()!,
+                        ReleaseDate = reader["ReleaseDate"] as DateTime?,
+                        Rating = reader["Rating"] as decimal?,
+                        Duration = reader["Duration"] as int?,
+                        PreviewUrl = reader["PreviewUrl"] as string,
+                        Description = reader["Description"] as string,
+                        DirectorID = reader["DirectorID"] as int?,
+
+                        // Deserialize JSON for actors and genres
+                        Director = JsonConvert.DeserializeObject<Director>(reader["DirectorJson"].ToString() ?? "{}"),
+                        Actors = JsonConvert.DeserializeObject<IEnumerable<Actor>>(reader["ActorsJson"].ToString() ?? "[]"),
+                        Genres = JsonConvert.DeserializeObject<IEnumerable<Genre>>(reader["GenresJson"].ToString() ?? "[]")
+                    };
+
+                    movies.Add(movie);
+                }
+
+                return movies;
+            }
+        }
+    }
+
 }
 

@@ -1,5 +1,113 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Laboration03.Models.ViewModels.MovieVM
 @{
+    ViewData["Title"] = "Update Movie";
+}
+
+<div class="card shadow border">
+    <div class="card-header bg-warning bg-gradient ml-0 py-4">
+        <div class="col-12 text-center">
+            <h2 class="card-title text-white">Update Movie</h2>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-action="Update" enctype="multipart/form-data">
+            <input type="hidden" asp-for="MovieID" />
+            <input type="hidden" asp-for="PreviewUrl" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" type="date" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" type="number" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" type="number" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Preview" class="control-label"></label><br />
+                <input asp-for="Preview" type="file" class="form-control-file" accept="video/*" id="videoInput" />
+                <span asp-validation-for="Preview" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <video id="videoPreview" controls style="display:none; width: 100%; max-height: 400px;"></video>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DirectorID" class="control-label">Director</label>
+                <select asp-for="DirectorID" class="form-control" asp-items="@(new SelectList(Model.AvailableDirectors, "DirectorID", "Name", Model.DirectorID))">
+                    <option value="">-- Select a Director --</option>
+                </select>
+                <span asp-validation-for="DirectorID" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group mb-3">
+                <label asp-for="SelectedActorIDs" class="control-label">Actors</label>
+                <select asp-for="SelectedActorIDs" class="form-control select2-multiple" asp-items="@(new MultiSelectList(Model.AvailableActors, "ActorID", "Name"))" multiple="multiple">
+                </select>
+                <span asp-validation-for="SelectedActorIDs" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SelectedGenreIDs" class="control-label">Genres</label>
+                <select asp-for="SelectedGenreIDs" class="form-control select2-multiple" asp-items="@(new MultiSelectList(Model.AvailableGenres, "GenreID", "GenreName"))" multiple="multiple">
+                </select>
+                <span asp-validation-for="SelectedGenreIDs" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="w-100 btn btn-lg btn-outline-warning">Update</button>
+                <a asp-action="Index" class="w-100 btn btn-lg btn-secondary mt-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+            $('.select2-multiple').select2({
+                placeholder: "Select options",
+                allowClear: true
+            });
+        });
+
+        document.getElementById('videoInput').addEventListener('change', function (event) {
+            var video = document.getElementById('videoPreview');
+            var file = event.target.files[0];
+
+            if (file && file.type.startsWith('video/')) {
+                var fileURL = URL.createObjectURL(file);
+                video.src = fileURL;
+                video.style.display = 'block';
+            } else {
+                video.style.display = 'none';
+                video.src = '';
+            }
+        });
+    </script>
 }
