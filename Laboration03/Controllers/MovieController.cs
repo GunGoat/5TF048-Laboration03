@@ -18,9 +18,9 @@ public class MovieController : Controller
         _webHostEnvironment = webHostEnvironment;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string titleSearch = null, string sortColumn = "Title", string sortOrder = "ASC")
     {
-        var movies = _unitOfWork.Movies.GetMoviesWithDetails();
+        var movies = _unitOfWork.Movies.GetMoviesWithDetails(titleSearch: titleSearch, sortColumn: sortColumn, sortOrder:sortOrder);
         return View(movies);
     }
 
@@ -89,7 +89,7 @@ public class MovieController : Controller
     public IActionResult Update(int id)
     {
         var movieFromDb = _unitOfWork.Movies
-            .GetMoviesWithDetails(id)
+            .GetMoviesWithDetails(movieIds: id)
             .FirstOrDefault();
         if (movieFromDb != null)
         {
@@ -175,7 +175,7 @@ public class MovieController : Controller
     public IActionResult Delete(int id)
     {
         var movieFromDb = _unitOfWork.Movies
-            .GetMoviesWithDetails(id)
+            .GetMoviesWithDetails(movieIds: id)
             .FirstOrDefault();
         if (movieFromDb != null)
         {

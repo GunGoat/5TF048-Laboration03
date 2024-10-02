@@ -74,20 +74,60 @@ public class MovieRepository : Repository<Movie>, IMovieRepository
         command.Parameters.AddWithValue("@MovieID", entity.MovieID);
     }
 
-    public IEnumerable<Movie> GetMoviesWithDetails(params int[] movieIds)
+    public IEnumerable<Movie> GetMoviesWithDetails(
+        string titleSearch = null,
+        string sortColumn = "Title",
+        string sortOrder = "ASC",
+        params int[] movieIds)
     {
+        // Validate sort column and sort order
+        var validSortColumns = new List<string> { "Title", "ReleaseDate", "Rating", "Duration" };
+        if (!validSortColumns.Contains(sortColumn))
+        {
+            throw new ArgumentException("Invalid sort column. Valid options are: Title, ReleaseDate, Rating, Duration.");
+        }
+
+        if (sortOrder.ToUpper() != "ASC" && sortOrder.ToUpper() != "DESC")
+        {
+            throw new ArgumentException("Invalid sort order. Valid options are: ASC or DESC.");
+        }
+
         // Base query
         string query = "SELECT * FROM View_MoviesWithDetails";
 
-        // If movieIds are provided, add WHERE clause
-        if (movieIds.Length > 0)
+        // Initialize a list to hold query conditions
+        List<string> conditions = new List<string>();
+
+        // If movieIds are provided, add WHERE clause for movie IDs
+        if (movieIds != null && movieIds.Length > 0)
         {
             string ids = string.Join(",", movieIds);
-            query += $" WHERE MovieID IN ({ids})";
+            conditions.Add($"MovieID IN ({ids})");
         }
+
+        // If titleSearch is provided, add WHERE clause for title
+        if (!string.IsNullOrEmpty(titleSearch))
+        {
+            conditions.Add("Title LIKE @titleSearch");
+        }
+
+        // Combine conditions into the query
+        if (conditions.Count > 0)
+        {
+            query += " WHERE " + string.Join(" AND ", conditions);
+        }
+
+        // Add sorting clause
+        query += $" ORDER BY {sortColumn} {sortOrder}";
 
         using (SqlCommand command = new SqlCommand(query, _connection, _transaction))
         {
+            // Add the titleSearch parameter to the query, if it's provided
+            if (!string.IsNullOrEmpty(titleSearch))
+            {
+                command.Parameters.AddWithValue("@titleSearch", "%" + titleSearch + "%");
+            }
+
             using (var reader = command.ExecuteReader())
             {
                 List<Movie> movies = new List<Movie>();
@@ -118,6 +158,8 @@ public class MovieRepository : Repository<Movie>, IMovieRepository
             }
         }
     }
+
+
 
     public void UpdateMovieGenres(int movieId, IEnumerable<int> genreIds)
     {

@@ -3,11 +3,62 @@
     ViewData["Title"] = "Movies List";
 }
 
+@functions {
+    public string GenerateOption(string value, string text, bool isSelected)
+    {
+        return $"<option value='{value}' {(isSelected ? "selected" : "")}>{text}</option>";
+    }
+}
+
 
 <div class="container mt-4 movie-card-container">
+
+    <!-- Collapsible filter form -->
     <div class="d-flex justify-content-between align-items-center my-4">
-        <!-- Create button -->
+        <h2>Movies List</h2>
+        <!-- Button to toggle the collapsible filter menu -->
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filterMenu" aria-expanded="false" aria-controls="filterMenu">
+            Filter & Sort
+        </button>
         <a asp-action="Create" class="btn btn-success">Create Movie</a>
+    </div>
+
+    <!-- Collapsible form -->
+    <div class="collapse" id="filterMenu">
+        <div class="card card-body mb-4">
+            <form method="get" asp-action="Index">
+                <div class="row mb-3">
+                    <!-- Title search input -->
+                    <div class="col-md-4">
+                        <label for="titleSearch" class="form-label">Search by Title</label>
+                        <input type="text" name="titleSearch" id="titleSearch" class="form-control" value="@Context.Request.Query["titleSearch"]" placeholder="Enter title">
+                    </div>
+
+                    <!-- Sort column dropdown -->
+                    <div class="col-md-4">
+                        <label for="sortColumn" class="form-label">Sort By</label>
+                        <select name="sortColumn" id="sortColumn" class="form-select">
+                            @Html.Raw(GenerateOption("Title", "Title", Context.Request.Query["sortColumn"] == "Title"))
+                            @Html.Raw(GenerateOption("ReleaseDate", "Release Date", Context.Request.Query["sortColumn"] == "ReleaseDate"))
+                            @Html.Raw(GenerateOption("Rating", "Rating", Context.Request.Query["sortColumn"] == "Rating"))
+                            @Html.Raw(GenerateOption("Duration", "Duration", Context.Request.Query["sortColumn"] == "Duration"))
+                        </select>
+                    </div>
+
+                    <!-- Sort order dropdown -->
+                    <div class="col-md-4">
+                        <label for="sortOrder" class="form-label">Order</label>
+                        <select name="sortOrder" id="sortOrder" class="form-select">
+                            @Html.Raw(GenerateOption("ASC", "Ascending", Context.Request.Query["sortOrder"] == "ASC"))
+                            @Html.Raw(GenerateOption("DESC", "Descending", Context.Request.Query["sortOrder"] == "DESC"))
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </form>
+        </div>
     </div>
 
     <div class="row">
@@ -82,7 +133,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.6); /* Black background with transparency */
+        background: rgba(0, 0, 0, 0.6);
         color: white;
         padding: 0px;
         text-align: center;
@@ -97,7 +148,7 @@
     }
 
     .movie-card-container .overlay-text {
-        font-size: 0.875rem; /* Smaller font size */
+        font-size: 0.875rem;
         margin-bottom: 5px;
     }
 </style>
