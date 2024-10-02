@@ -66,7 +66,9 @@ public class MovieController : Controller
                     PreviewUrl = movieVM.PreviewUrl,
                 };
 
-                _unitOfWork.Movies.Add(movie);
+                movie.MovieID = _unitOfWork.Movies.Add(movie);
+                _unitOfWork.Movies.UpdateMovieActors(movie.MovieID, movieVM.SelectedActorIDs.ToArray());
+                _unitOfWork.Movies.UpdateMovieGenres(movie.MovieID, movieVM.SelectedGenreIDs.ToArray());
                 _unitOfWork.Commit();
                 TempData["success"] = $"Successfully added movie '{movieVM.Title}'";
                 return RedirectToAction(nameof(Index));
@@ -151,6 +153,8 @@ public class MovieController : Controller
                 };
 
                 _unitOfWork.Movies.Update(movie);
+                _unitOfWork.Movies.UpdateMovieActors(movie.MovieID, movieVM.SelectedActorIDs.ToArray());
+                _unitOfWork.Movies.UpdateMovieGenres(movie.MovieID, movieVM.SelectedGenreIDs.ToArray());
                 _unitOfWork.Commit();
                 TempData["success"] = $"Successfully added movie '{movieVM.Title}'";
                 return RedirectToAction(nameof(Index));
@@ -277,5 +281,4 @@ public class MovieController : Controller
             System.IO.File.Delete(filePath);
         }
     }
-
 }

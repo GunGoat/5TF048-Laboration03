@@ -33,7 +33,6 @@ public class MovieRepository : Repository<Movie>, IMovieRepository
             DirectorID = reader["DirectorID"] as int?,
             PreviewUrl = reader["PreviewUrl"] as string,
             Description = reader["Description"] as string,
-            // Assuming lazy loading for Director or could load manually if required
         };
     }
 
@@ -120,5 +119,33 @@ public class MovieRepository : Repository<Movie>, IMovieRepository
         }
     }
 
-}
+    public void UpdateMovieGenres(int movieId, IEnumerable<int> genreIds)
+    {
+        using (SqlCommand command = new SqlCommand("UpdateMovieGenres", _connection, _transaction))
+        {
+            command.CommandType = System.Data.CommandType.StoredProcedure;
 
+            // Set the parameters for the stored procedure
+            command.Parameters.AddWithValue("@MovieID", movieId);
+            command.Parameters.AddWithValue("@GenreIDs", string.Join(",", genreIds));
+
+            // Execute the stored procedure
+            command.ExecuteNonQuery();
+        }
+    }
+
+    public void UpdateMovieActors(int movieId, IEnumerable<int> actorsIds)
+    {
+        using (SqlCommand command = new SqlCommand("UpdateMovieActors", _connection, _transaction))
+        {
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            // Set the parameters for the stored procedure
+            command.Parameters.AddWithValue("@MovieID", movieId);
+            command.Parameters.AddWithValue("@ActorIDs", string.Join(",", actorsIds));
+
+            // Execute the stored procedure
+            command.ExecuteNonQuery();
+        }
+    }
+}

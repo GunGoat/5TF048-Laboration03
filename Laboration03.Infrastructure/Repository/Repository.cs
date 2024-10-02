@@ -79,18 +79,30 @@ public abstract class Repository<T> : IRepository<T> where T : class
     }
 
     /// <summary>
-    /// Adds a new entity to the database.
+    /// Adds a new entity to the database and retrieves the generated ID.
     /// </summary>
     /// <param name="entity">The entity to add.</param>
-    public virtual void Add(T entity)
+    /// <returns>The ID of the newly added entity.</returns>
+    public virtual int Add(T entity)
     {
-        string query = $"INSERT INTO {TableName} {GetInsertColumns()} VALUES {GetInsertValues()}";
+        // The query SCOPE_IDENTITY() is used to retrieve the generated ID
+        string query = $"INSERT INTO {TableName} {GetInsertColumns()} VALUES {GetInsertValues()}; SELECT SCOPE_IDENTITY();";
         using (SqlCommand command = new SqlCommand(query, _connection, _transaction))
         {
             SetInsertParameters(command, entity);
-            command.ExecuteNonQuery();
+
+            // Execute the command and get the newly inserted ID
+            object result = command.ExecuteScalar();
+            if (result != null)
+            {
+                // Convert the result to an integer 
+                return Convert.ToInt32(result);
+            }
+
+            throw new InvalidOperationException("Failed to retrieve the ID of the newly inserted entity.");
         }
     }
+
 
     /// <summary>
     /// Updates an existing entity in the database.
